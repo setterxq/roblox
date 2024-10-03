@@ -14,6 +14,9 @@ public class SC_FPSController : MonoBehaviour
     public float lookSpeed = 2.0f;
     public float lookXLimit = 45.0f;
 
+    //[HideInInspector] 
+    public bool InStair = false;
+
     CharacterController characterController;
     Vector3 moveDirection = Vector3.zero;
     float rotationX = 0;
@@ -35,12 +38,21 @@ public class SC_FPSController : MonoBehaviour
         // We are grounded, so recalculate move direction based on axes
         Vector3 forward = transform.TransformDirection(Vector3.forward);
         Vector3 right = transform.TransformDirection(Vector3.right);
+        Vector3 up = transform.TransformDirection(Vector3.up);
         // Press Left Shift to run
         bool isRunning = Input.GetKey(KeyCode.LeftShift);
         float curSpeedX = canMove ? (isRunning ? runningSpeed : walkingSpeed) * Input.GetAxis("Vertical") : 0;
         float curSpeedY = canMove ? (isRunning ? runningSpeed : walkingSpeed) * Input.GetAxis("Horizontal") : 0;
         float movementDirectionY = moveDirection.y;
-        moveDirection = (forward * curSpeedX) + (right * curSpeedY);
+
+        if (!InStair)
+        {
+            moveDirection = (forward * curSpeedX) + (right * curSpeedY);
+        }
+        else
+        {
+            moveDirection = (up * curSpeedX) + (right * curSpeedY);
+        }
 
         if (Input.GetButton("Jump") && canMove && characterController.isGrounded)
         {
