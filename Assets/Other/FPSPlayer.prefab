@@ -26,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9210579366318506677}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.9934146, z: -0, w: 0.11457518}
+  m_LocalRotation: {x: 0, y: 0.9934148, z: 0, w: 0.114573}
   m_LocalPosition: {x: 7.5908375, y: 0.0000004951702, z: -4.153789}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -47,10 +47,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 314134540d1be9b42b85e504f43aa993, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkingSpeed: 6
-  runningSpeed: 10
+  walkingSpeed: 5
+  runningSpeed: 5
   jumpSpeed: 8
-  gravity: 20
+  gravity: 18
   playerCamera: {fileID: 9210579366826673605}
   lookSpeed: 2
   lookXLimit: 45
