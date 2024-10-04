@@ -15,7 +15,7 @@ public class SC_FPSController : MonoBehaviour
     public float lookXLimit = 45.0f;
 
     //[HideInInspector] 
-    public bool InStair = false;
+    //public bool InStair = false;
 
     CharacterController characterController;
     Vector3 moveDirection = Vector3.zero;
@@ -23,6 +23,8 @@ public class SC_FPSController : MonoBehaviour
 
     [HideInInspector]
     public bool canMove = true;
+
+    public Joystick joystick;
 
     void Start()
     {
@@ -40,19 +42,26 @@ public class SC_FPSController : MonoBehaviour
         Vector3 right = transform.TransformDirection(Vector3.right);
         Vector3 up = transform.TransformDirection(Vector3.up);
         // Press Left Shift to run
-        bool isRunning = Input.GetKey(KeyCode.LeftShift);
+        bool isRunning = false;
         float curSpeedX = canMove ? (isRunning ? runningSpeed : walkingSpeed) * Input.GetAxis("Vertical") : 0;
         float curSpeedY = canMove ? (isRunning ? runningSpeed : walkingSpeed) * Input.GetAxis("Horizontal") : 0;
+
+        if (joystick.gameObject.activeInHierarchy)
+        {
+            curSpeedX = canMove ? (isRunning ? runningSpeed : walkingSpeed) * joystick.Vertical : 0;
+            curSpeedY = canMove ? (isRunning ? runningSpeed : walkingSpeed) * joystick.Horizontal : 0;
+        }
+
         float movementDirectionY = moveDirection.y;
 
-        if (!InStair)
-        {
+        //if (!InStair)
+        //{
             moveDirection = (forward * curSpeedX) + (right * curSpeedY);
-        }
-        else
-        {
-            moveDirection = (up * curSpeedX) + (right * curSpeedY);
-        }
+        //}
+        //else
+        //{
+        //    moveDirection = (up * curSpeedX) + (right * curSpeedY);
+        //}
 
         if (Input.GetButton("Jump") && canMove && characterController.isGrounded)
         {
