@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using YG;
 
 [RequireComponent(typeof(CharacterController))]
 
@@ -15,7 +16,7 @@ public class SC_FPSController : MonoBehaviour
     public float lookXLimit = 45.0f;
 
     //[HideInInspector] 
-    //public bool InStair = false;
+    public bool InStair = false;
 
     CharacterController characterController;
     Vector3 moveDirection = Vector3.zero;
@@ -30,9 +31,13 @@ public class SC_FPSController : MonoBehaviour
     {
         characterController = GetComponent<CharacterController>();
 
-        // Lock cursor
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        if (YandexGame.EnvironmentData.deviceType == "desktop")
+        {
+            // Lock cursor
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+            joystick.gameObject.SetActive(false);
+        }   
     }
 
     void Update()

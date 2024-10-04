@@ -21,6 +21,14 @@ public class BlockBehaviour : MonoBehaviour
             Destroy(other.gameObject);
         }
     }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(blockType == BlockType.Stairs && collision.gameObject.tag == "Player")
+        {
+            
+        }
+    }
 }
 
 public enum BlockType
@@ -28,5 +36,6 @@ public enum BlockType
     Damage,
     Fake,
     Normal,
-    Stairs
+    Stairs,
+    Teleport
 }

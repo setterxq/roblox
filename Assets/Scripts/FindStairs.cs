@@ -11,7 +11,7 @@ public class FindStairs : MonoBehaviour
         BlockBehaviour blockBehaviour = other.GetComponent<BlockBehaviour>();
         if(blockBehaviour != null && blockBehaviour.blockType == BlockType.Stairs)
         {
-            //controller.InStair = true;
+            controller.InStair = true;
         }
     }
 
@@ -20,7 +20,7 @@ public class FindStairs : MonoBehaviour
         BlockBehaviour blockBehaviour = other.GetComponent<BlockBehaviour>();
         if (blockBehaviour != null && blockBehaviour.blockType == BlockType.Stairs)
         {
-            //controller.InStair = false;
+            controller.InStair = false;
         }
     }
 }
