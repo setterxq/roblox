@@ -28,6 +28,7 @@ public class SC_FPSController : MonoBehaviour
     public Joystick joystick;
 
     private float _saveGravity;
+    private Rigidbody rb;
 
     void Start()
     {
@@ -42,6 +43,7 @@ public class SC_FPSController : MonoBehaviour
         }
 
         _saveGravity = gravity;
+        rb = GetComponent<Rigidbody>();
     }
 
     void Update()
@@ -49,7 +51,6 @@ public class SC_FPSController : MonoBehaviour
         // We are grounded, so recalculate move direction based on axes
         Vector3 forward = transform.TransformDirection(Vector3.forward);
         Vector3 right = transform.TransformDirection(Vector3.right);
-        Vector3 up = transform.TransformDirection(Vector3.up);
         // Press Left Shift to run
         bool isRunning = false;
         float curSpeedX = canMove ? (isRunning ? runningSpeed : walkingSpeed) * Input.GetAxis("Vertical") : 0;
@@ -71,7 +72,8 @@ public class SC_FPSController : MonoBehaviour
         else
         {
             gravity = 0;
-            moveDirection = (up * curSpeedX) + (right * curSpeedY);
+            rb.velocity = new Vector2(rb.velocity.x, (10));
+           moveDirection = (forward * curSpeedX) + (right * curSpeedY);
         }
 
         if (Input.GetButton("Jump") && canMove && characterController.isGrounded)

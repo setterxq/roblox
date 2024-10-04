@@ -6,11 +6,17 @@ public class BlockBehaviour : MonoBehaviour
 {
     public BlockType blockType = BlockType.Normal;
 
+    public Transform TargetForTeleport;
+
     private void Start()
     {
         if(blockType == BlockType.Damage)
         {
             GetComponent<BoxCollider>().isTrigger = true;
+        }
+        if (blockType == BlockType.Fake)
+        {
+            GetComponent<BoxCollider>().enabled = false;
         }
     }
 
@@ -20,13 +26,23 @@ public class BlockBehaviour : MonoBehaviour
         {
             Destroy(other.gameObject);
         }
+
+        if (blockType == BlockType.Stairs && other.gameObject.tag == "Player")
+        {
+            other.transform.gameObject.GetComponent<SC_FPSController>().InStair = true;
+        }
+
+        if (blockType == BlockType.Teleport && other.gameObject.tag == "Player")
+        {
+            other.transform.position = TargetForTeleport.position;
+        }
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerExit(Collider other)
     {
-        if(blockType == BlockType.Stairs && collision.gameObject.tag == "Player")
+        if (blockType == BlockType.Stairs && other.gameObject.tag == "Player")
         {
-            
+            other.transform.gameObject.GetComponent<SC_FPSController>().InStair = false;
         }
     }
 }
