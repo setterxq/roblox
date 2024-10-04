@@ -27,6 +27,8 @@ public class SC_FPSController : MonoBehaviour
 
     public Joystick joystick;
 
+    private float _saveGravity;
+
     void Start()
     {
         characterController = GetComponent<CharacterController>();
@@ -37,7 +39,9 @@ public class SC_FPSController : MonoBehaviour
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
             joystick.gameObject.SetActive(false);
-        }   
+        }
+
+        _saveGravity = gravity;
     }
 
     void Update()
@@ -59,14 +63,16 @@ public class SC_FPSController : MonoBehaviour
 
         float movementDirectionY = moveDirection.y;
 
-        //if (!InStair)
-        //{
+        if (!InStair)
+        {
+            gravity = _saveGravity;
             moveDirection = (forward * curSpeedX) + (right * curSpeedY);
-        //}
-        //else
-        //{
-        //    moveDirection = (up * curSpeedX) + (right * curSpeedY);
-        //}
+        }
+        else
+        {
+            gravity = 0;
+            moveDirection = (up * curSpeedX) + (right * curSpeedY);
+        }
 
         if (Input.GetButton("Jump") && canMove && characterController.isGrounded)
         {
@@ -96,5 +102,10 @@ public class SC_FPSController : MonoBehaviour
             playerCamera.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);
             transform.rotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * lookSpeed, 0);
         }
+    }
+
+    public void Jump()
+    {
+        moveDirection.y = jumpSpeed;
     }
 }
