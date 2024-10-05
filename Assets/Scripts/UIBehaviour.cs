@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using YG;
 
 public class UIBehaviour : MonoBehaviour
 {
@@ -22,19 +23,26 @@ public class UIBehaviour : MonoBehaviour
         if (_pausePanel.activeInHierarchy)
         {
             _pausePanel.SetActive(false);
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
+
+            if (YandexGame.EnvironmentData.isDesktop)
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+            }
         }
         else
         {
             _pausePanel.SetActive(true);
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
+            if (YandexGame.EnvironmentData.isDesktop)
+            {
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+            }
         }
     }
 
     public void OnChangedSensivity()
     {
-        _controller.lookSpeed = (_sensivitySlider.value + 0.3f)*3;
+        _controller.lookSpeed = (_sensivitySlider.value + 0.3f)*2.5f;
     }
 }
