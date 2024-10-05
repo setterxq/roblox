@@ -30,6 +30,8 @@ public class SC_FPSController : MonoBehaviour
     private float _saveGravity;
     private Rigidbody rb;
 
+    private Vector2 lastTouchPosition;
+
     void Start()
     {
         characterController = GetComponent<CharacterController>();
@@ -48,7 +50,7 @@ public class SC_FPSController : MonoBehaviour
 
     void Update()
     {
-        
+
         // We are grounded, so recalculate move direction based on axes
         Vector3 forward = transform.TransformDirection(Vector3.forward);
         Vector3 right = transform.TransformDirection(Vector3.right);
@@ -74,7 +76,7 @@ public class SC_FPSController : MonoBehaviour
         {
             gravity = 0;
             rb.velocity = new Vector2(rb.velocity.x, (10));
-           moveDirection = (forward * curSpeedX) + (right * curSpeedY);
+            moveDirection = (forward * curSpeedX) + (right * curSpeedY);
         }
 
         if (Input.GetButton("Jump") && canMove && characterController.isGrounded)
@@ -100,14 +102,50 @@ public class SC_FPSController : MonoBehaviour
         // Player and Camera rotation
         if (canMove)
         {
-            if (Input.mousePosition.x > Screen.width / 2.2)
+
+            if (!YandexGame.EnvironmentData.isDesktop)
             {
                 rotationX += -Input.GetAxis("Mouse Y") * lookSpeed;
                 rotationX = Mathf.Clamp(rotationX, -lookXLimit, lookXLimit);
                 playerCamera.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);
                 transform.rotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * lookSpeed, 0);
             }
+            else
+            {
+                for (int i = 0; i < Input.touches.Length; i++)
+                {
+                    if (Input.GetTouch(i).position.x > Screen.width / 2.2)
+                    {
+                        RotCam(Input.GetTouch(i));
+                        break;
+                    }
+                }
+            }
+
         }
+    }
+
+    public void RotCam(Touch touch)
+    {
+        // При начале касания запоминаем позицию 
+        if (touch.phase == TouchPhase.Began)
+        {
+            lastTouchPosition = touch.position;
+        }
+        // При движении пальца вращаем камеру 
+        else if (touch.phase == TouchPhase.Moved)
+        {
+            Vector2 deltaPosition = touch.position - lastTouchPosition;
+
+            // Вращение вокруг вертикальной оси (по горизонтали) 
+            transform.Rotate(Vector3.up, deltaPosition.x * lookSpeed / 5);
+
+            // Вращение вокруг горизонтальной оси (по вертикали) 
+            playerCamera.gameObject.transform.Rotate(Vector3.left, deltaPosition.y * lookSpeed / 5);
+
+            lastTouchPosition = touch.position;
+        }
+
     }
 
     public void Jump()

@@ -4,91 +4,35 @@ using UnityEngine;
 
 public class RotateCamera : MonoBehaviour
 {
-    public Transform cameraTransform;
-    public float cameraSensitivity;
-
-    int leftFingerID, rightFingerID;
-    float halfScreenWidth;
-
-    Vector2 lookInput;
-    float cameraPitch;
-
-    void Start()
-    {
-        leftFingerID = -1;
-        rightFingerID = -1;
-
-        halfScreenWidth = Screen.width / 2;
-    }
+    public float rotationSpeed = 0.5f;
+    private Vector2 lastTouchPosition;
 
     void Update()
     {
-        GetTouchInput();
-
-        if (rightFingerID != -1)
+        // Если один палец коснулся экрана 
+        if (Input.touchCount == 1)
         {
-            LookAround();
-        }
-    }
+            Touch touch = Input.GetTouch(0);
 
-    void GetTouchInput()
-    {
-        for (int i = 0; i < Input.touchCount; i++)
-        {
-            Touch t = Input.GetTouch(i);
-
-            switch (t.phase)
+            // При начале касания запоминаем позицию 
+            if (touch.phase == TouchPhase.Began)
             {
-                case TouchPhase.Began:
+                lastTouchPosition = touch.position;
+            }
+            // При движении пальца вращаем камеру 
+            else if (touch.phase == TouchPhase.Moved)
+            {
+                Vector2 deltaPosition = touch.position - lastTouchPosition;
 
-                    if (t.position.x < halfScreenWidth && leftFingerID == -1)
-                    {
-                        leftFingerID = t.fingerId;
-                    }
-                    else if (t.position.x > halfScreenWidth && rightFingerID == -1)
-                    {
-                        rightFingerID = t.fingerId;
-                    }
-                    break;
+                // Вращение вокруг вертикальной оси (по горизонтали) 
+                transform.Rotate(Vector3.up, deltaPosition.x * rotationSpeed);
 
-                case TouchPhase.Ended:
-                case TouchPhase.Canceled:
+                // Вращение вокруг горизонтальной оси (по вертикали) 
+                transform.Rotate(Vector3.left, deltaPosition.y * rotationSpeed);
 
-                    if (t.fingerId == leftFingerID)
-                    {
-                        leftFingerID = -1;
-                    }
-                    else if (t.fingerId == rightFingerID)
-                    {
-                        rightFingerID = -1;
-                    }
-                    break;
-
-                case TouchPhase.Moved:
-
-                    if (t.fingerId == rightFingerID)
-                    {
-                        lookInput = t.deltaPosition * cameraSensitivity * Time.deltaTime;
-                    }
-                    break;
-
-                case TouchPhase.Stationary:
-
-                    if (t.fingerId == rightFingerID)
-                    {
-                        lookInput = Vector2.zero;
-                    }
-                    break;
+                lastTouchPosition = touch.position;
             }
         }
-    }
-
-    void LookAround()
-    {
-        cameraPitch = Mathf.Clamp(cameraPitch - lookInput.y, -90f, 90f);
-        cameraTransform.localRotation = Quaternion.Euler(cameraPitch, 0, 0);
-
-        transform.Rotate(transform.up, lookInput.x);
     }
 
 }
