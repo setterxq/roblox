@@ -17,6 +17,7 @@ public class SC_FPSController : MonoBehaviour
 
     //[HideInInspector] 
     public bool InStair = false;
+    public bool Pause;
 
     CharacterController characterController;
     Vector3 moveDirection = Vector3.zero;
@@ -29,6 +30,8 @@ public class SC_FPSController : MonoBehaviour
 
     private float _saveGravity;
     private Rigidbody rb;
+    private bool isTouch = false;
+    private Touch touch;
 
     private Vector2 lastTouchPosition;
 
@@ -36,7 +39,7 @@ public class SC_FPSController : MonoBehaviour
     {
         characterController = GetComponent<CharacterController>();
 
-        if (YandexGame.EnvironmentData.deviceType == "desktop")
+        if (YandexGame.EnvironmentData.deviceType == "desktopd")
         {
             // Lock cursor
             Cursor.lockState = CursorLockMode.Locked;
@@ -50,11 +53,91 @@ public class SC_FPSController : MonoBehaviour
 
     void FixedUpdate()
     {
+        if(touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled)
+        {
+            isTouch = false;
+        }
 
-        // We are grounded, so recalculate move direction based on axes
+        // Player and Camera rotation
+        if (canMove && !Pause)
+        {
+            Movement();
+
+
+            if (!YandexGame.EnvironmentData.isDesktop)
+            {
+                RotateCameraDesktop();
+            }
+            else
+            {
+                for (int i = 0; i < Input.touches.Length; i++)
+                {
+                    if (Input.GetTouch(i).position.x > Screen.width / 2.2f || isTouch)
+                    {
+                        isTouch = true;
+                        touch = Input.GetTouch(i);
+                        if (Input.GetTouch(i).position.x > Screen.width / 2.2 && Input.GetTouch(i).position.x < Screen.width / 2.1)
+                        {
+                            lastTouchPosition = Input.GetTouch(i).position;
+                        }
+                        RotateCameraMobile(Input.GetTouch(i));
+                        break;
+                    }
+                }
+            }
+
+        }
+    }
+
+    public void RotateCameraDesktop()
+    {
+        rotationX += -Input.GetAxis("Mouse Y") * lookSpeed;
+        rotationX = Mathf.Clamp(rotationX, -lookXLimit, lookXLimit);
+        playerCamera.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);
+        transform.rotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * lookSpeed, 0);
+    }
+
+    public void RotateCameraMobile(Touch touch)
+    {
+        if (touch.phase == TouchPhase.Began)
+        {
+            lastTouchPosition = touch.position;
+        }
+        else if (touch.phase == TouchPhase.Moved)
+        {
+            
+            Vector2 deltaPosition = touch.position - lastTouchPosition;
+            if(deltaPosition.magnitude > 200)
+            {
+                lastTouchPosition = touch.position;
+                deltaPosition = Vector3.zero;
+            }
+            
+            transform.Rotate(Vector3.up, deltaPosition.x * lookSpeed / 5);
+
+            playerCamera.gameObject.transform.Rotate(Vector3.left, deltaPosition.y * lookSpeed / 5);
+
+
+
+            if (playerCamera.transform.eulerAngles.x > 80 && playerCamera.transform.eulerAngles.x < 150)
+            {
+                playerCamera.transform.eulerAngles = new Vector3(80, playerCamera.transform.eulerAngles.y, 0);
+            }
+
+            if (playerCamera.transform.eulerAngles.x < 280 && playerCamera.transform.eulerAngles.x > 200)
+            {
+                playerCamera.transform.eulerAngles = new Vector3(280, playerCamera.transform.eulerAngles.y, 0);
+            }
+
+            lastTouchPosition = touch.position;
+        }
+    }
+
+    public void Movement()
+    {
+        if (Pause) return;
         Vector3 forward = transform.TransformDirection(Vector3.forward);
         Vector3 right = transform.TransformDirection(Vector3.right);
-        // Press Left Shift to run
         bool isRunning = false;
         float curSpeedX = canMove ? (isRunning ? runningSpeed : walkingSpeed) * Input.GetAxis("Vertical") : 0;
         float curSpeedY = canMove ? (isRunning ? runningSpeed : walkingSpeed) * Input.GetAxis("Horizontal") : 0;
@@ -81,79 +164,26 @@ public class SC_FPSController : MonoBehaviour
 
         if (Input.GetButton("Jump") && canMove && characterController.isGrounded)
         {
-            moveDirection.y = jumpSpeed;
+            Jump();
         }
         else
         {
             moveDirection.y = movementDirectionY;
         }
 
-        // Apply gravity. Gravity is multiplied by deltaTime twice (once here, and once below
-        // when the moveDirection is multiplied by deltaTime). This is because gravity should be applied
-        // as an acceleration (ms^-2)
         if (!characterController.isGrounded)
         {
             moveDirection.y -= gravity * Time.deltaTime;
         }
 
-        // Move the controller
         characterController.Move(moveDirection * Time.deltaTime);
-
-        // Player and Camera rotation
-        if (canMove)
-        {
-
-            if (YandexGame.EnvironmentData.isDesktop)
-            {
-                rotationX += -Input.GetAxis("Mouse Y") * lookSpeed;
-                rotationX = Mathf.Clamp(rotationX, -lookXLimit, lookXLimit);
-                playerCamera.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);
-                transform.rotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * lookSpeed, 0);
-            }
-            else
-            {
-                for (int i = 0; i < Input.touches.Length; i++)
-                {
-                    if (Input.GetTouch(i).position.x > Screen.width / 2.2)
-                    {
-                        if (Input.GetTouch(i).position.x > Screen.width / 2.2 && Input.GetTouch(i).position.x < Screen.width / 2.1) 
-                        {
-                            lastTouchPosition = Input.GetTouch(i).position; 
-                        }
-                        RotCam(Input.GetTouch(i));
-                        break;
-                    }
-                }
-            }
-
-        }
-    }
-
-    public void RotCam(Touch touch)
-    {
-        // При начале касания запоминаем позицию 
-        if (touch.phase == TouchPhase.Began)
-        {
-            lastTouchPosition = touch.position;
-        }
-        // При движении пальца вращаем камеру 
-        else if (touch.phase == TouchPhase.Moved)
-        {
-            Vector2 deltaPosition = touch.position - lastTouchPosition;
-
-            // Вращение вокруг вертикальной оси (по горизонтали) 
-            transform.Rotate(Vector3.up, deltaPosition.x * lookSpeed / 5);
-
-            // Вращение вокруг горизонтальной оси (по вертикали) 
-            playerCamera.gameObject.transform.Rotate(Vector3.left, deltaPosition.y * lookSpeed / 5);
-
-            lastTouchPosition = touch.position;
-        }
-
     }
 
     public void Jump()
     {
-        moveDirection.y = jumpSpeed;
+        if (characterController.isGrounded)
+        {
+            moveDirection.y = jumpSpeed;
+        }
     }
 }

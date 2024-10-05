@@ -12,7 +12,7 @@ public class UIBehaviour : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.Tab))
         {
             OpenClosePause();
         }
@@ -23,6 +23,7 @@ public class UIBehaviour : MonoBehaviour
         if (_pausePanel.activeInHierarchy)
         {
             _pausePanel.SetActive(false);
+            _controller.Pause = false;
 
             if (YandexGame.EnvironmentData.isDesktop)
             {
@@ -33,6 +34,7 @@ public class UIBehaviour : MonoBehaviour
         else
         {
             _pausePanel.SetActive(true);
+            _controller.Pause = true;
             if (YandexGame.EnvironmentData.isDesktop)
             {
                 Cursor.lockState = CursorLockMode.None;
@@ -43,6 +45,6 @@ public class UIBehaviour : MonoBehaviour
 
     public void OnChangedSensivity()
     {
-        _controller.lookSpeed = (_sensivitySlider.value + 0.3f)*2.5f;
+        _controller.lookSpeed = (_sensivitySlider.value + (1/4))*4;
     }
 }
