@@ -48,7 +48,7 @@ public class SC_FPSController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
     }
 
-    void Update()
+    void FixedUpdate()
     {
 
         // We are grounded, so recalculate move direction based on axes
@@ -103,7 +103,7 @@ public class SC_FPSController : MonoBehaviour
         if (canMove)
         {
 
-            if (!YandexGame.EnvironmentData.isDesktop)
+            if (YandexGame.EnvironmentData.isDesktop)
             {
                 rotationX += -Input.GetAxis("Mouse Y") * lookSpeed;
                 rotationX = Mathf.Clamp(rotationX, -lookXLimit, lookXLimit);
@@ -116,6 +116,10 @@ public class SC_FPSController : MonoBehaviour
                 {
                     if (Input.GetTouch(i).position.x > Screen.width / 2.2)
                     {
+                        if (Input.GetTouch(i).position.x > Screen.width / 2.2 && Input.GetTouch(i).position.x < Screen.width / 2.1) 
+                        {
+                            lastTouchPosition = Input.GetTouch(i).position; 
+                        }
                         RotCam(Input.GetTouch(i));
                         break;
                     }
