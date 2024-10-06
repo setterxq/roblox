@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using YG;
 
 [RequireComponent(typeof(CharacterController))]
@@ -27,11 +28,14 @@ public class SC_FPSController : MonoBehaviour
     public bool canMove = true;
 
     public Joystick joystick;
+    public GameObject JumpButton;
+    public GameObject PauseButton;
 
     private float _saveGravity;
-    private Rigidbody rb;
+    public Rigidbody rb;
     private bool isTouch = false;
     private Touch touch;
+    private bool _firstChangeTouch = false;
 
     private Vector2 lastTouchPosition;
 
@@ -39,12 +43,14 @@ public class SC_FPSController : MonoBehaviour
     {
         characterController = GetComponent<CharacterController>();
 
-        if (YandexGame.EnvironmentData.deviceType == "desktopd")
+        if (YandexGame.EnvironmentData.deviceType == "desktop")
         {
             // Lock cursor
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
             joystick.gameObject.SetActive(false);
+            JumpButton.SetActive(false);
+            PauseButton.SetActive(false);
         }
 
         _saveGravity = gravity;
@@ -64,7 +70,7 @@ public class SC_FPSController : MonoBehaviour
             Movement();
 
 
-            if (!YandexGame.EnvironmentData.isDesktop)
+            if (YandexGame.EnvironmentData.isDesktop)
             {
                 RotateCameraDesktop();
             }
@@ -72,14 +78,8 @@ public class SC_FPSController : MonoBehaviour
             {
                 for (int i = 0; i < Input.touches.Length; i++)
                 {
-                    if (Input.GetTouch(i).position.x > Screen.width / 2.2f || isTouch)
+                    if (!IsPointerOverUIObject())
                     {
-                        isTouch = true;
-                        touch = Input.GetTouch(i);
-                        if (Input.GetTouch(i).position.x > Screen.width / 2.2 && Input.GetTouch(i).position.x < Screen.width / 2.1)
-                        {
-                            lastTouchPosition = Input.GetTouch(i).position;
-                        }
                         RotateCameraMobile(Input.GetTouch(i));
                         break;
                     }
@@ -87,6 +87,21 @@ public class SC_FPSController : MonoBehaviour
             }
 
         }
+    }
+
+    bool IsPointerOverUIObject()
+    {
+
+        if (Input.touchCount > 0)
+        {
+            Touch touch = Input.GetTouch(0);
+            PointerEventData eventData = new PointerEventData(EventSystem.current);
+            eventData.position = touch.position;
+            List<RaycastResult> results = new List<RaycastResult>();
+            EventSystem.current.RaycastAll(eventData, results);
+            return results.Count > 0;
+        }
+        return false;
     }
 
     public void RotateCameraDesktop()
@@ -102,18 +117,22 @@ public class SC_FPSController : MonoBehaviour
         if (touch.phase == TouchPhase.Began)
         {
             lastTouchPosition = touch.position;
+            _firstChangeTouch = true;
         }
         else if (touch.phase == TouchPhase.Moved)
         {
             
             Vector2 deltaPosition = touch.position - lastTouchPosition;
-            if(deltaPosition.magnitude > 200)
+
+            if(deltaPosition.magnitude > 50)
             {
                 lastTouchPosition = touch.position;
                 deltaPosition = Vector3.zero;
+                _firstChangeTouch = false;
             }
+
             
-            transform.Rotate(Vector3.up, deltaPosition.x * lookSpeed / 5);
+            transform.Rotate(Vector3.up, deltaPosition.x * lookSpeed / 6);
 
             playerCamera.gameObject.transform.Rotate(Vector3.left, deltaPosition.y * lookSpeed / 5);
 
