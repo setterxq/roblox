@@ -34,7 +34,11 @@ public class BlockBehaviour : MonoBehaviour
 
         if (blockType == BlockType.Teleport && other.gameObject.tag == "Player")
         {
-            other.transform.position = TargetForTeleport.position;
+            CharacterController controller = null;
+            controller = other.GetComponent<CharacterController>();
+            controller.enabled = false;
+            other.gameObject.transform.position = TargetForTeleport.position;
+            controller.enabled = true;
         }
     }
 
