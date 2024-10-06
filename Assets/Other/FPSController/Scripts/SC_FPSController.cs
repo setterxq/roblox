@@ -78,7 +78,7 @@ public class SC_FPSController : MonoBehaviour
             {
                 for (int i = 0; i < Input.touches.Length; i++)
                 {
-                    if (!IsPointerOverUIObject())
+                    if (!IsPointerOverUIObject(Input.GetTouch(i)))
                     {
                         RotateCameraMobile(Input.GetTouch(i));
                         break;
@@ -89,12 +89,11 @@ public class SC_FPSController : MonoBehaviour
         }
     }
 
-    bool IsPointerOverUIObject()
+    bool IsPointerOverUIObject(Touch touch)
     {
 
         if (Input.touchCount > 0)
         {
-            Touch touch = Input.GetTouch(0);
             PointerEventData eventData = new PointerEventData(EventSystem.current);
             eventData.position = touch.position;
             List<RaycastResult> results = new List<RaycastResult>();
