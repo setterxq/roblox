@@ -4508,13 +4508,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 352528861}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: be0318bece2a64c488246d78189b8740, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   type: 1
-  speed: 5
+  speed: 0
   target1: {fileID: 0}
   target2: {fileID: 0}
 --- !u!1 &369129352
