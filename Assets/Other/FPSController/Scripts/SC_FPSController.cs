@@ -33,6 +33,7 @@ public class SC_FPSController : MonoBehaviour
 
     private float _saveGravity;
     public Rigidbody rb;
+    public AudioSource Source;
     private bool isTouch = false;
     private Touch touch;
     private bool _firstChangeTouch = false;

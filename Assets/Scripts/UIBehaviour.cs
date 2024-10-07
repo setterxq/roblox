@@ -8,6 +8,7 @@ public class UIBehaviour : MonoBehaviour
 {
     [SerializeField] private GameObject _pausePanel;
     [SerializeField] private Slider _sensivitySlider;
+    [SerializeField] private Slider _volumeSlider;
     [SerializeField] private SC_FPSController _controller;
 
     private void Start()
@@ -15,6 +16,8 @@ public class UIBehaviour : MonoBehaviour
         YandexGame.SwitchLanguage(YandexGame.savesData.language);
         _controller.lookSpeed = YandexGame.savesData.Sensivity;
         _sensivitySlider.value = (YandexGame.savesData.Sensivity / 4);
+        _volumeSlider.value = YandexGame.savesData.Volume;
+        _controller.Source.volume = _volumeSlider.value;
         SwitchQuality();
     }
 
@@ -44,6 +47,13 @@ public class UIBehaviour : MonoBehaviour
         YandexGame.savesData.language = lang;
         YandexGame.SaveProgress();
     }
+
+    public void ChangeVolume()
+    {
+        _controller.Source.volume = _volumeSlider.value;
+        YandexGame.savesData.Volume = _volumeSlider.value;
+        YandexGame.SaveProgress();
+    } 
 
     public void OpenClosePause()
     {
