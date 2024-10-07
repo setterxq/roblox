@@ -10,12 +10,39 @@ public class UIBehaviour : MonoBehaviour
     [SerializeField] private Slider _sensivitySlider;
     [SerializeField] private SC_FPSController _controller;
 
+    private void Start()
+    {
+        YandexGame.SwitchLanguage(YandexGame.savesData.language);
+        _controller.lookSpeed = YandexGame.savesData.Sensivity;
+        _sensivitySlider.value = (YandexGame.savesData.Sensivity / 4);
+        SwitchQuality();
+    }
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             OpenClosePause();
         }
+    }
+
+    public void SwitchQuality()
+    {
+        if (YandexGame.EnvironmentData.isDesktop)
+        {
+            QualitySettings.globalTextureMipmapLimit = 0;
+        }
+        else
+        {
+            QualitySettings.globalTextureMipmapLimit = 3;
+        }
+    }
+
+    public void ChangeLanguage(string lang)
+    {
+        YandexGame.SwitchLanguage(lang);
+        YandexGame.savesData.language = lang;
+        YandexGame.SaveProgress();
     }
 
     public void OpenClosePause()

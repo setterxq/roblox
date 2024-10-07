@@ -31,6 +31,6 @@ public class ControlProgress : MonoBehaviour
 
     public void Spawn()
     {
-        Instantiate(Player, CheckpointArray[LastSave].transform.position, CheckpointArray[LastSave].transform.rotation);
+        Instantiate(Player, CheckpointArray[0].transform.position, CheckpointArray[0].transform.rotation);
     }
 }
