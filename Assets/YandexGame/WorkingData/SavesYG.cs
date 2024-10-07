@@ -18,6 +18,10 @@ namespace YG
 
         // Ваши сохранения
 
+        public int LastSave;
+        public float Sensivity;
+        public float Volume;
+
         // ...
 
         // Поля (сохранения) можно удалять и создавать новые. При обновлении игры сохранения ломаться не должны

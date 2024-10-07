@@ -46,5 +46,7 @@ public class UIBehaviour : MonoBehaviour
     public void OnChangedSensivity()
     {
         _controller.lookSpeed = (_sensivitySlider.value + (1/4))*4;
+        YandexGame.savesData.Sensivity = _controller.lookSpeed;
+        YandexGame.SaveProgress();
     }
 }
