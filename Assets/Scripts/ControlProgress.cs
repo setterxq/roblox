@@ -11,6 +11,7 @@ public class ControlProgress : MonoBehaviour
 
     private void Start()
     {
+        YandexGame.GameReadyAPI();
         LastSave = Load();
         Spawn();
     }
