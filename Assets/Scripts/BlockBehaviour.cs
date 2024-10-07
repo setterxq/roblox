@@ -10,7 +10,7 @@ public class BlockBehaviour : MonoBehaviour
 
     private void Start()
     {
-        if(blockType == BlockType.Damage)
+        if(blockType == BlockType.Damage || blockType == BlockType.Damage)
         {
             GetComponent<BoxCollider>().isTrigger = true;
         }
