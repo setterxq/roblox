@@ -9,6 +9,7 @@ public class ControlProgress : MonoBehaviour
     public int LastSave;
     public GameObject Player;
 
+
     private void Start()
     {
         YandexGame.GameReadyAPI();
