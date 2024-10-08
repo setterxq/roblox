@@ -16,6 +16,16 @@ public class ControlProgress : MonoBehaviour
         Spawn();
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Pause))
+        {
+            LastSave = 0;
+            YandexGame.savesData.LastSave = LastSave;
+            YandexGame.SaveProgress();
+        }
+    }
+
     public void Save(int currentCheckPoint)
     {
         if (currentCheckPoint <= LastSave) return;
@@ -31,6 +41,6 @@ public class ControlProgress : MonoBehaviour
 
     public void Spawn()
     {
-        Instantiate(Player, CheckpointArray[0].transform.position, CheckpointArray[0].transform.rotation);
+        Instantiate(Player, CheckpointArray[LastSave].transform.position, CheckpointArray[LastSave].transform.rotation);
     }
 }
