@@ -24,7 +24,7 @@ public class BlockBehaviour : MonoBehaviour
     {
         if(blockType == BlockType.Damage && other.gameObject.tag == "Player")
         {
-            Destroy(other.gameObject);
+            other.GetComponent<SC_FPSController>().UIControl.Lose();
         }
 
         if (blockType == BlockType.Stairs && other.gameObject.tag == "Player")

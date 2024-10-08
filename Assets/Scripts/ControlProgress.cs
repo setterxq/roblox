@@ -13,7 +13,7 @@ public class ControlProgress : MonoBehaviour
     {
         YandexGame.GameReadyAPI();
         LastSave = Load();
-        Spawn();
+        Spawn(true);
     }
 
     private void Update()
@@ -39,8 +39,11 @@ public class ControlProgress : MonoBehaviour
         return YandexGame.savesData.LastSave;
     }
 
-    public void Spawn()
+    public void Spawn(bool isDead)
     {
-        Instantiate(Player, CheckpointArray[LastSave].transform.position, CheckpointArray[LastSave].transform.rotation);
+        if (isDead)
+        {
+            Instantiate(Player, CheckpointArray[LastSave].transform.position, CheckpointArray[LastSave].transform.rotation);
+        }
     }
 }

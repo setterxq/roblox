@@ -10,6 +10,11 @@ public class UIBehaviour : MonoBehaviour
     [SerializeField] private Slider _sensivitySlider;
     [SerializeField] private Slider _volumeSlider;
     [SerializeField] private SC_FPSController _controller;
+    [SerializeField] private GameObject _loseScreen;
+    private ControlProgress _controlProgress;
+
+    private bool _lose = false;
+    private float timer = 0;
 
     private void Start()
     {
@@ -19,14 +24,44 @@ public class UIBehaviour : MonoBehaviour
         _volumeSlider.value = YandexGame.savesData.Volume;
         _controller.Source.volume = _volumeSlider.value;
         SwitchQuality();
+        _controlProgress = GameObject.FindGameObjectWithTag("GameController").GetComponent<ControlProgress>();
+    }
+
+    public void Lose()
+    {
+        _lose = true;
+        _loseScreen.SetActive(true);
+        _controller.characterController.enabled = false;
+
+        if (YandexGame.EnvironmentData.isDesktop)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Tab))
+        if (Input.GetKeyDown(KeyCode.Tab) && !_lose)
         {
             OpenClosePause();
         }
+
+        if(timer > 70)
+        {
+            timer = 0;
+            YandexGame.FullscreenShow();
+        }
+
+        timer += Time.deltaTime;
+    }
+
+    public void RespawnButton()
+    {
+        _controlProgress.Spawn(true);
+        Destroy(_controller.gameObject);
+        timer = 0;
+        YandexGame.FullscreenShow();
     }
 
     public void SwitchQuality()

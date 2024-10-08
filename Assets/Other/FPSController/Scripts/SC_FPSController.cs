@@ -20,7 +20,7 @@ public class SC_FPSController : MonoBehaviour
     public bool InStair = false;
     public bool Pause;
 
-    CharacterController characterController;
+    public CharacterController characterController;
     Vector3 moveDirection = Vector3.zero;
     float rotationX = 0;
 
@@ -34,6 +34,7 @@ public class SC_FPSController : MonoBehaviour
     private float _saveGravity;
     public Rigidbody rb;
     public AudioSource Source;
+    public UIBehaviour UIControl;
     private bool isTouch = false;
     private Touch touch;
     private bool _firstChangeTouch = false;
@@ -87,6 +88,11 @@ public class SC_FPSController : MonoBehaviour
                 }
             }
 
+        }
+
+        if(transform.position.y < -30)
+        {
+            UIControl.Lose();
         }
     }
 
