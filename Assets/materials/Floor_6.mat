@@ -39,7 +39,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _DstBlend: 0
-    - _Glossiness: 0.5
+    - _Glossiness: 0
     - _Mode: 0
     - _ZWrite: 1
     m_Colors:

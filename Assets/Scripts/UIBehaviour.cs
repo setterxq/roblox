@@ -71,6 +71,11 @@ public class UIBehaviour : MonoBehaviour
         Destroy(_controller.gameObject);
         timer = 0;
         YandexGame.FullscreenShow();
+        if (YandexGame.EnvironmentData.isDesktop)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
     }
 
     public void SwitchQuality()
