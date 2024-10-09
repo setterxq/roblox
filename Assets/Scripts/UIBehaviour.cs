@@ -11,6 +11,7 @@ public class UIBehaviour : MonoBehaviour
     [SerializeField] private Slider _volumeSlider;
     [SerializeField] private SC_FPSController _controller;
     [SerializeField] private GameObject _loseScreen;
+    [SerializeField] private Image _progressBar;
     private ControlProgress _controlProgress;
 
     private bool _lose = false;
@@ -25,6 +26,8 @@ public class UIBehaviour : MonoBehaviour
         _controller.Source.volume = _volumeSlider.value;
         SwitchQuality();
         _controlProgress = GameObject.FindGameObjectWithTag("GameController").GetComponent<ControlProgress>();
+        _controlProgress.uIBehaviour = this;
+        ChangeProgressbar(_controlProgress.LastSave / 73f);
     }
 
     public void Lose()
@@ -38,6 +41,12 @@ public class UIBehaviour : MonoBehaviour
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         }
+    }
+
+    public void ChangeProgressbar(float value)
+    {
+        Debug.Log(value);
+        _progressBar.fillAmount = value;
     }
 
     private void Update()

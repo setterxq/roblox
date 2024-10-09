@@ -575,6 +575,7 @@ MonoBehaviour:
   _volumeSlider: {fileID: 6352240225088786465}
   _controller: {fileID: 9210579366318506675}
   _loseScreen: {fileID: 7903687076002361269}
+  _progressBar: {fileID: 1029769320669358709}
 --- !u!1 &1880781356390213579
 GameObject:
   m_ObjectHideFlags: 0
@@ -1079,7 +1080,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -50.000015}
+  m_AnchoredPosition: {x: 0, y: -47}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6887627257071789801
@@ -1103,7 +1104,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.26683998, g: 1, b: 0, a: 0.7058824}
+  m_Color: {r: 0.26683998, g: 1, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

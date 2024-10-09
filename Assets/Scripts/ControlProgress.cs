@@ -8,7 +8,7 @@ public class ControlProgress : MonoBehaviour
     public CheckPoint[] CheckpointArray;
     public int LastSave;
     public GameObject Player;
-
+    public UIBehaviour uIBehaviour;
 
     private void Start()
     {
@@ -33,6 +33,7 @@ public class ControlProgress : MonoBehaviour
         LastSave = currentCheckPoint;
         YandexGame.savesData.LastSave = LastSave;
         YandexGame.SaveProgress();
+        uIBehaviour.ChangeProgressbar(LastSave/ 73f);
     }
 
     public int Load()
