@@ -12,6 +12,7 @@ public class UIBehaviour : MonoBehaviour
     [SerializeField] private SC_FPSController _controller;
     [SerializeField] private GameObject _loseScreen;
     [SerializeField] private Image _progressBar;
+    [SerializeField] private Text _timerText;
     private ControlProgress _controlProgress;
 
     private bool _lose = false;
@@ -59,7 +60,7 @@ public class UIBehaviour : MonoBehaviour
         if(timer > 70)
         {
             timer = 0;
-            YandexGame.FullscreenShow();
+            StartCoroutine(WaitTime());
         }
 
         timer += Time.deltaTime;
@@ -86,7 +87,7 @@ public class UIBehaviour : MonoBehaviour
         }
         else
         {
-            QualitySettings.globalTextureMipmapLimit = 3;
+            QualitySettings.globalTextureMipmapLimit = 2;
         }
     }
 
@@ -134,5 +135,30 @@ public class UIBehaviour : MonoBehaviour
         _controller.lookSpeed = (_sensivitySlider.value + (1/4))*4;
         YandexGame.savesData.Sensivity = _controller.lookSpeed;
         YandexGame.SaveProgress();
+    }
+
+    public IEnumerator WaitTime()
+    {
+        _timerText.gameObject.SetActive(true);
+        if (YandexGame.lang == "ru")  
+        {
+            _timerText.text = "Реклама через 2";
+        }
+        else
+        {
+            _timerText.text = "advertising in 2";
+        }
+        yield return new WaitForSeconds(1);
+        if (YandexGame.lang == "ru")
+        {
+            _timerText.text = "Реклама через 1";
+        }
+        else
+        {
+            _timerText.text = "advertising in 1";
+        }
+        yield return new WaitForSeconds(1);
+        _timerText.gameObject.SetActive(false);
+        YandexGame.FullscreenShow();
     }
 }

@@ -36,6 +36,15 @@ public class ControlProgress : MonoBehaviour
         uIBehaviour.ChangeProgressbar(LastSave/ 73f);
     }
 
+    public void InvisibleCursor()
+    {
+        if (YandexGame.EnvironmentData.isDesktop)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+    }
+
     public int Load()
     {
         return YandexGame.savesData.LastSave;

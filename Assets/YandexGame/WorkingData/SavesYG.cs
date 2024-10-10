@@ -19,8 +19,8 @@ namespace YG
         // Ваши сохранения
 
         public int LastSave;
-        public float Sensivity;
-        public float Volume;
+        public float Sensivity = 1;
+        public float Volume = 1;
 
         // ...
 
