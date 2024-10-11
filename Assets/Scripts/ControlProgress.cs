@@ -40,9 +40,15 @@ public class ControlProgress : MonoBehaviour
     {
         if (YandexGame.EnvironmentData.isDesktop)
         {
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
+            StartCoroutine(Lock());
         }
+    }
+
+    private IEnumerator Lock()
+    {
+        yield return new WaitForSeconds(0.1f);
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     public int Load()

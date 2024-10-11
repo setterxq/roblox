@@ -35,10 +35,10 @@ public class SC_FPSController : MonoBehaviour
     public Rigidbody rb;
     public AudioSource Source;
     public UIBehaviour UIControl;
-    private bool isTouch = false;
-    private Touch touch;
-    private bool _firstChangeTouch = false;
     public bool IsDesktop;
+    private Touch touch;
+    private bool isTouch;
+    private bool _firstChangeTouch;
 
     private Vector2 lastTouchPosition;
 
@@ -64,11 +64,12 @@ public class SC_FPSController : MonoBehaviour
     {
         if (IsDesktop)
         {
+            if (Pause) return;
             RotateCameraDesktop();
         }
         else
         {
-            if (Input.touches.Length == 0) return;
+            if (Input.touches.Length == 0 || Pause) return;
             for (int i = 0; i < Input.touches.Length; i++)
             {
                 if (!IsPointerOverUIObject(Input.GetTouch(i)))

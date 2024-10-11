@@ -11,8 +11,9 @@ public class UIBehaviour : MonoBehaviour
     [SerializeField] private Slider _volumeSlider;
     [SerializeField] private SC_FPSController _controller;
     [SerializeField] private GameObject _loseScreen;
-    [SerializeField] private Image _progressBar;
+    [SerializeField] private Slider _progressBar;
     [SerializeField] private Text _timerText;
+    [SerializeField] private GameObject _closePauseUI;
     private ControlProgress _controlProgress;
     private bool _isDesktop;
 
@@ -35,8 +36,20 @@ public class UIBehaviour : MonoBehaviour
 
     public void Lose()
     {
+        if (_lose) return;
+
+        if (!_isDesktop)
+        {
+            for (int i = 0; i < _closePauseUI.transform.childCount; i++)
+            {
+                _closePauseUI.transform.GetChild(i).gameObject.SetActive(false);
+            }
+        }
+        
+        _progressBar.gameObject.SetActive(false);
         _lose = true;
         _loseScreen.SetActive(true);
+        _controller.Pause = true;
         _controller.characterController.enabled = false;
 
         if (YandexGame.EnvironmentData.isDesktop)
@@ -48,8 +61,7 @@ public class UIBehaviour : MonoBehaviour
 
     public void ChangeProgressbar(float value)
     {
-        Debug.Log(value);
-        _progressBar.fillAmount = value;
+        _progressBar.value = value;
     }
 
     private void Update()
@@ -65,7 +77,10 @@ public class UIBehaviour : MonoBehaviour
             StartCoroutine(WaitTime());
         }
 
-        timer += Time.deltaTime;
+        if (!_controller.Pause)
+        {
+            timer += Time.deltaTime;
+        }
     }
 
     public void RespawnButton()
@@ -74,6 +89,7 @@ public class UIBehaviour : MonoBehaviour
         Destroy(_controller.gameObject);
         timer = 0;
         YandexGame.FullscreenShow();
+        _controller.Pause = false;
         if (_isDesktop)
         {
             Cursor.lockState = CursorLockMode.Locked;
@@ -89,7 +105,7 @@ public class UIBehaviour : MonoBehaviour
         }
         else
         {
-            QualitySettings.globalTextureMipmapLimit = 2;
+            QualitySettings.globalTextureMipmapLimit = 3;
         }
     }
 
@@ -112,22 +128,40 @@ public class UIBehaviour : MonoBehaviour
         if (_pausePanel.activeInHierarchy)
         {
             _pausePanel.SetActive(false);
-            _controller.Pause = false;
+            _controller.Pause = false;            
 
             if (_isDesktop)
             {
                 Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
+                _closePauseUI.transform.GetChild(0).gameObject.SetActive(true);
+            }
+            else
+            {
+                for (int i = 0; i < _closePauseUI.transform.childCount; i++)
+                {
+                    _closePauseUI.transform.GetChild(i).gameObject.SetActive(true);
+                }
             }
         }
         else
         {
             _pausePanel.SetActive(true);
             _controller.Pause = true;
+
             if (_isDesktop)
             {
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
+
+                _closePauseUI.transform.GetChild(0).gameObject.SetActive(false);
+            }
+            else
+            {
+                for (int i = 0; i < _closePauseUI.transform.childCount; i++)
+                {
+                    _closePauseUI.transform.GetChild(i).gameObject.SetActive(false);
+                }
             }
         }
     }
