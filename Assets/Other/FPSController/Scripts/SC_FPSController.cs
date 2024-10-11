@@ -35,7 +35,7 @@ public class SC_FPSController : MonoBehaviour
     public Rigidbody rb;
     public AudioSource Source;
     public UIBehaviour UIControl;
-    public bool IsDesktop;
+    public bool IsDesktop = false;
     private Touch touch;
     private bool isTouch;
     private bool _firstChangeTouch;
