@@ -38,14 +38,16 @@ public class SC_FPSController : MonoBehaviour
     private bool isTouch = false;
     private Touch touch;
     private bool _firstChangeTouch = false;
+    public bool IsDesktop;
 
     private Vector2 lastTouchPosition;
 
     void Start()
     {
         characterController = GetComponent<CharacterController>();
+        IsDesktop = YandexGame.EnvironmentData.isDesktop;
 
-        if (YandexGame.EnvironmentData.deviceType == "desktop")
+        if (IsDesktop)
         {
             // Lock cursor
             Cursor.lockState = CursorLockMode.Locked;
@@ -58,6 +60,25 @@ public class SC_FPSController : MonoBehaviour
         _saveGravity = gravity;
         rb = GetComponent<Rigidbody>();
     }
+    private void Update()
+    {
+        if (IsDesktop)
+        {
+            RotateCameraDesktop();
+        }
+        else
+        {
+            if (Input.touches.Length == 0) return;
+            for (int i = 0; i < Input.touches.Length; i++)
+            {
+                if (!IsPointerOverUIObject(Input.GetTouch(i)))
+                {
+                    RotateCameraMobile(Input.GetTouch(i));
+                    break;
+                }
+            }
+        }
+    }
 
     void FixedUpdate()
     {
@@ -69,25 +90,7 @@ public class SC_FPSController : MonoBehaviour
         // Player and Camera rotation
         if (canMove && !Pause)
         {
-            Movement();
-
-
-            if (YandexGame.EnvironmentData.isDesktop)
-            {
-                RotateCameraDesktop();
-            }
-            else
-            {
-                for (int i = 0; i < Input.touches.Length; i++)
-                {
-                    if (!IsPointerOverUIObject(Input.GetTouch(i)))
-                    {
-                        RotateCameraMobile(Input.GetTouch(i));
-                        break;
-                    }
-                }
-            }
-
+            Movement(); 
         }
 
         if(transform.position.y < -30)

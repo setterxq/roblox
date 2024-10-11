@@ -14,6 +14,7 @@ public class UIBehaviour : MonoBehaviour
     [SerializeField] private Image _progressBar;
     [SerializeField] private Text _timerText;
     private ControlProgress _controlProgress;
+    private bool _isDesktop;
 
     private bool _lose = false;
     private float timer = 0;
@@ -29,6 +30,7 @@ public class UIBehaviour : MonoBehaviour
         _controlProgress = GameObject.FindGameObjectWithTag("GameController").GetComponent<ControlProgress>();
         _controlProgress.uIBehaviour = this;
         ChangeProgressbar(_controlProgress.LastSave / 73f);
+        _isDesktop = _controller.IsDesktop;
     }
 
     public void Lose()
@@ -72,7 +74,7 @@ public class UIBehaviour : MonoBehaviour
         Destroy(_controller.gameObject);
         timer = 0;
         YandexGame.FullscreenShow();
-        if (YandexGame.EnvironmentData.isDesktop)
+        if (_isDesktop)
         {
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
@@ -81,7 +83,7 @@ public class UIBehaviour : MonoBehaviour
 
     public void SwitchQuality()
     {
-        if (YandexGame.EnvironmentData.isDesktop)
+        if (_isDesktop)
         {
             QualitySettings.globalTextureMipmapLimit = 0;
         }
@@ -112,7 +114,7 @@ public class UIBehaviour : MonoBehaviour
             _pausePanel.SetActive(false);
             _controller.Pause = false;
 
-            if (YandexGame.EnvironmentData.isDesktop)
+            if (_isDesktop)
             {
                 Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
@@ -122,7 +124,7 @@ public class UIBehaviour : MonoBehaviour
         {
             _pausePanel.SetActive(true);
             _controller.Pause = true;
-            if (YandexGame.EnvironmentData.isDesktop)
+            if (_isDesktop)
             {
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
@@ -132,6 +134,7 @@ public class UIBehaviour : MonoBehaviour
 
     public void OnChangedSensivity()
     {
+        if (_sensivitySlider.value == 0) _sensivitySlider.value = 0.01f;
         _controller.lookSpeed = (_sensivitySlider.value + (1/4))*4;
         YandexGame.savesData.Sensivity = _controller.lookSpeed;
         YandexGame.SaveProgress();
