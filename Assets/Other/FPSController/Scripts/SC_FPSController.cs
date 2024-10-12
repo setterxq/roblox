@@ -113,11 +113,9 @@ public class SC_FPSController : MonoBehaviour
         Silence(isPaused);
     }
 
-    private void Silence(bool silence)
+    public void Silence(bool silence)
     {
         AudioListener.pause = silence;
-        // Or / And
-        AudioListener.volume = silence ? 0 : 1;
     }
 
     public void Movement()

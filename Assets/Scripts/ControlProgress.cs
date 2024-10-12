@@ -40,6 +40,7 @@ public class ControlProgress : MonoBehaviour
     {
         if (YandexGame.EnvironmentData.isDesktop)
         {
+            Time.timeScale = 1f;
             StartCoroutine(Lock());
         }
     }
@@ -49,6 +50,7 @@ public class ControlProgress : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        AudioListener.volume = 1;
     }
 
     public int Load()
