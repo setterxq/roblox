@@ -20,7 +20,7 @@ namespace YG
 
         public int LastSave;
         public float Sensivity = 1;
-        public float Volume = 1;
+        public float Volume = 0.5f;
 
         // ...
 

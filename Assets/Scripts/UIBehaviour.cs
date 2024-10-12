@@ -176,6 +176,7 @@ public class UIBehaviour : MonoBehaviour
 
     public IEnumerator WaitTime()
     {
+        _timerText.transform.parent.gameObject.SetActive(true);
         _timerText.gameObject.SetActive(true);
         if (YandexGame.lang == "ru")  
         {
@@ -196,6 +197,7 @@ public class UIBehaviour : MonoBehaviour
         }
         yield return new WaitForSeconds(1);
         _timerText.gameObject.SetActive(false);
+        _timerText.transform.parent.gameObject.SetActive(false);
         YandexGame.FullscreenShow();
     }
 }

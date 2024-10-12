@@ -15,6 +15,7 @@ public class SC_FPSController : MonoBehaviour
     public Camera playerCamera;
     public float lookSpeed = 2.0f;
     public float lookXLimit = 45.0f;
+    public AudioListener Listener;
 
     //[HideInInspector] 
     public bool InStair = false;
@@ -60,6 +61,7 @@ public class SC_FPSController : MonoBehaviour
         _saveGravity = gravity;
         rb = GetComponent<Rigidbody>();
     }
+
     private void Update()
     {
         if (IsDesktop)
@@ -160,6 +162,23 @@ public class SC_FPSController : MonoBehaviour
 
             lastTouchPosition = touch.position;
         }
+    }
+
+    void OnApplicationFocus(bool hasFocus)
+    {
+        Silence(!hasFocus);
+    }
+
+    void OnApplicationPause(bool isPaused)
+    {
+        Silence(isPaused);
+    }
+
+    private void Silence(bool silence)
+    {
+        AudioListener.pause = silence;
+        // Or / And
+        AudioListener.volume = silence ? 0 : 1;
     }
 
     public void Movement()
