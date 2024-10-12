@@ -57,7 +57,7 @@ public class CameraMov : MonoBehaviour
         for (int i = 0; i < Input.touchCount; i++)
         {
             Touch t = Input.GetTouch(i);
-            if (IsPointerOverUIObject(t))  return; 
+            //if (IsPointerOverUIObject(t))  return; 
 
             switch (t.phase)
             {
@@ -108,8 +108,8 @@ public class CameraMov : MonoBehaviour
     void LookAround()
     {
         cameraPitch = Mathf.Clamp(cameraPitch - lookInput.y, -90f, 90f);
-        cameraTransform.localRotation = Quaternion.Euler(cameraPitch, 0, 0);
+        cameraTransform.localRotation = Quaternion.Euler(-cameraPitch, 0, 0);
 
-        transform.Rotate(transform.up, lookInput.x);
+        transform.Rotate(-transform.up, lookInput.x);
     }
 }
