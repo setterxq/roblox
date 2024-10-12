@@ -71,15 +71,7 @@ public class SC_FPSController : MonoBehaviour
         }
         else
         {
-            if (Input.touches.Length == 0 || Pause) return;
-            for (int i = 0; i < Input.touches.Length; i++)
-            {
-                if (!IsPointerOverUIObject(Input.GetTouch(i)))
-                {
-                    RotateCameraMobile(Input.GetTouch(i));
-                    break;
-                }
-            }
+            return;
         }
     }
 
@@ -102,20 +94,6 @@ public class SC_FPSController : MonoBehaviour
         }
     }
 
-    bool IsPointerOverUIObject(Touch touch)
-    {
-
-        if (Input.touchCount > 0)
-        {
-            PointerEventData eventData = new PointerEventData(EventSystem.current);
-            eventData.position = touch.position;
-            List<RaycastResult> results = new List<RaycastResult>();
-            EventSystem.current.RaycastAll(eventData, results);
-            return results.Count > 0;
-        }
-        return false;
-    }
-
     public void RotateCameraDesktop()
     {
         rotationX += -Input.GetAxis("Mouse Y") * lookSpeed;
@@ -124,45 +102,6 @@ public class SC_FPSController : MonoBehaviour
         transform.rotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * lookSpeed, 0);
     }
 
-    public void RotateCameraMobile(Touch touch)
-    {
-        if (touch.phase == TouchPhase.Began)
-        {
-            lastTouchPosition = touch.position;
-            _firstChangeTouch = true;
-        }
-        else if (touch.phase == TouchPhase.Moved)
-        {
-            
-            Vector2 deltaPosition = touch.position - lastTouchPosition;
-
-            if(deltaPosition.magnitude > 50)
-            {
-                lastTouchPosition = touch.position;
-                deltaPosition = Vector3.zero;
-                _firstChangeTouch = false;
-            }
-
-            
-            transform.Rotate(Vector3.up, deltaPosition.x * lookSpeed / 6);
-
-            playerCamera.gameObject.transform.Rotate(Vector3.left, deltaPosition.y * lookSpeed / 5);
-
-
-
-            if (playerCamera.transform.eulerAngles.x > 80 && playerCamera.transform.eulerAngles.x < 150)
-            {
-                playerCamera.transform.eulerAngles = new Vector3(80, playerCamera.transform.eulerAngles.y, 0);
-            }
-
-            if (playerCamera.transform.eulerAngles.x < 280 && playerCamera.transform.eulerAngles.x > 200)
-            {
-                playerCamera.transform.eulerAngles = new Vector3(280, playerCamera.transform.eulerAngles.y, 0);
-            }
-
-            lastTouchPosition = touch.position;
-        }
-    }
 
     void OnApplicationFocus(bool hasFocus)
     {
