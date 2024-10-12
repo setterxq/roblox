@@ -4177,16 +4177,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2905156520663467575, guid: 7c8f2d96f5a335e428a3ef20baf6484a, type: 3}
       propertyPath: en
-      value: 'Hi, I''m John.
-
-'
+      value: Hi, I'm John
       objectReference: {fileID: 0}
     - target: {fileID: 2905156520663467575, guid: 7c8f2d96f5a335e428a3ef20baf6484a, type: 3}
       propertyPath: ru
-      value: "\u041F\u0440\u0438\u0432\u0435\u0442, \u044F \u0414\u0436\u043E\u043D.\n\u0418
-        \u044F \u043F\u043E\u043C\u043E\u0433\u0443 \u043F\u0440\u043E\u0439\u0442\u0438
-        \u0442\u0435\u0431\u0435 \u044D\u0442\u043E\n\u0442\u0440\u043E\u043B\u043B\u044C
-        \u0438\u0433\u0440\u0443"
+      value: "\u041F\u0440\u0438\u0432\u0435\u0442, \u044F \u0414\u0436\u043E\u043D"
       objectReference: {fileID: 0}
     - target: {fileID: 2905156520663467575, guid: 7c8f2d96f5a335e428a3ef20baf6484a, type: 3}
       propertyPath: textHeight
