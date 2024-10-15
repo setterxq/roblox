@@ -15,7 +15,6 @@ public class SC_FPSController : MonoBehaviour
     public Camera playerCamera;
     public float lookSpeed = 2.0f;
     public float lookXLimit = 45.0f;
-    public AudioListener Listener;
 
     //[HideInInspector] 
     public bool InStair = false;
@@ -34,7 +33,6 @@ public class SC_FPSController : MonoBehaviour
 
     private float _saveGravity;
     public Rigidbody rb;
-    public AudioSource Source;
     public UIBehaviour UIControl;
     public bool IsDesktop = false;
     private Touch touch;

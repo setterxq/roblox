@@ -9,13 +9,16 @@ public class UIBehaviour : MonoBehaviour
 {
     [SerializeField] private GameObject _pausePanel;
     [SerializeField] private Slider _sensivitySlider;
-    [SerializeField] private Slider _volumeSlider;
     public SC_FPSController _controller;
     [SerializeField] private GameObject _loseScreen;
     [SerializeField] private Slider _progressBar;
     [SerializeField] private Text _timerText;
     [SerializeField] private GameObject _closePauseUI;
-    public AudioMixer Mixer;
+    [SerializeField] private GameObject SettingsImageForPC;
+
+    public float times;
+
+
     private ControlProgress _controlProgress;
     private bool _isDesktop;
 
@@ -27,14 +30,22 @@ public class UIBehaviour : MonoBehaviour
         YandexGame.SwitchLanguage(YandexGame.savesData.language);
         _controller.lookSpeed = YandexGame.savesData.Sensivity;
         _sensivitySlider.value = (YandexGame.savesData.Sensivity / 4);
-        _volumeSlider.value = YandexGame.savesData.Volume;
-        _controller.Source.volume = _volumeSlider.value;
         SwitchQuality();
         _controlProgress = GameObject.FindGameObjectWithTag("GameController").GetComponent<ControlProgress>();
         _controlProgress.uIBehaviour = this;
         ChangeProgressbar(_controlProgress.LastSave / 73f);
         _isDesktop = _controller.IsDesktop;
+
+        if (_isDesktop)
+        {
+            SettingsImageForPC.SetActive(true);
+        }
+        else
+        {
+            SettingsImageForPC.SetActive(false);
+        }
     }
+
 
     public void Lose()
     {
@@ -70,6 +81,8 @@ public class UIBehaviour : MonoBehaviour
 
     private void Update()
     {
+        times = YandexGame.TimeToAd;
+
         if (Input.GetKeyDown(KeyCode.Tab) && !_lose)
         {
             OpenClosePause();
@@ -95,7 +108,6 @@ public class UIBehaviour : MonoBehaviour
         if (YandexGame.timerShowAd > 60)
         {
             AudioListener.volume = 0;
-            Mixer.SetFloat("MasterVolume", -80);
             YandexGame.FullscreenShow();
         }
         _controller.Pause = false;
@@ -124,13 +136,6 @@ public class UIBehaviour : MonoBehaviour
         YandexGame.savesData.language = lang;
         YandexGame.SaveProgress();
     }
-
-    public void ChangeVolume()
-    {
-        _controller.Source.volume = _volumeSlider.value;
-        YandexGame.savesData.Volume = _volumeSlider.value;
-        YandexGame.SaveProgress();
-    } 
 
     public void OpenClosePause()
     {
@@ -191,7 +196,7 @@ public class UIBehaviour : MonoBehaviour
 
     public IEnumerator WaitTime()
     {
-        if (YandexGame.timerShowAd < 70) 
+        if (times >= 0) 
         {
             StopCoroutine(WaitTime());        
         }
@@ -199,6 +204,7 @@ public class UIBehaviour : MonoBehaviour
         _timerText.gameObject.SetActive(true);
         _controller.rb.isKinematic = true;
         _controller.characterController.enabled = false;
+
         if (YandexGame.lang == "ru")  
         {
             _timerText.text = "Реклама через 2";
@@ -208,6 +214,7 @@ public class UIBehaviour : MonoBehaviour
             _timerText.text = "advertising in 2";
         }
         yield return new WaitForSeconds(1);
+
         if (YandexGame.lang == "ru")
         {
             _timerText.text = "Реклама через 1";
@@ -217,8 +224,6 @@ public class UIBehaviour : MonoBehaviour
             _timerText.text = "advertising in 1";
         }
         yield return new WaitForSeconds(1);
-        AudioListener.volume = 0;
-        Mixer.SetFloat("MasterVolume", -80);
         _controller.characterController.enabled = true;
         _controller.rb.isKinematic = false;
         _timerText.gameObject.SetActive(false);

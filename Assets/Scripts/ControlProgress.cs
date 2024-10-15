@@ -10,7 +10,6 @@ public class ControlProgress : MonoBehaviour
     public int LastSave;
     public GameObject Player;
     public UIBehaviour uIBehaviour;
-    public AudioMixer Mixer;
 
     private void Start()
     {
@@ -45,8 +44,6 @@ public class ControlProgress : MonoBehaviour
             Time.timeScale = 1f;
             StartCoroutine(Lock());
         }
-        Mixer.SetFloat("MasterVolume", 0);
-        AudioListener.volume = 1;
     }
 
     private IEnumerator Lock()

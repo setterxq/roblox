@@ -8,6 +8,7 @@ namespace YG
 {
     [HelpURL("https://ash-message-bf4.notion.site/PluginYG-d457b23eee604b7aa6076116aab647ed")]
     [DefaultExecutionOrder(-100)]
+    
     public partial class YandexGame : MonoBehaviour
     {
         public InfoYG infoYG;
@@ -32,6 +33,7 @@ namespace YG
         public UnityEvent PromptDo;
         public UnityEvent PromptFail;
         public UnityEvent ReviewDo;
+        public static float TimeToAd;
 
         #region Data Fields
         public static bool auth { get => _auth; }
@@ -123,6 +125,11 @@ namespace YG
                 InitGame_js();
 #endif
             }
+        }
+
+        private void LateUpdate()
+        {
+            TimeToAd = infoYG.fullscreenAdInterval - timerShowAd;
         }
 
         private static void Message(string message)
