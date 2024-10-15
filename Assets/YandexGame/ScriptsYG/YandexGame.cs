@@ -197,7 +197,6 @@ namespace YG
             if (!nowAdsShow && timerShowAd >= infoYG.fullscreenAdInterval)
             {
                 timerShowAd = 0;
-                AudioListener.volume = 0;
                 Debug.Log("X");
                 onAdNotification?.Invoke();
 #if !UNITY_EDITOR

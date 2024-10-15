@@ -57,7 +57,6 @@ public class CameraMov : MonoBehaviour
         for (int i = 0; i < Input.touchCount; i++)
         {
             Touch t = Input.GetTouch(i);
-            //if (IsPointerOverUIObject(t))  return; 
 
             switch (t.phase)
             {

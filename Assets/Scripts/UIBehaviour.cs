@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.UI;
 using YG;
 
@@ -9,11 +10,12 @@ public class UIBehaviour : MonoBehaviour
     [SerializeField] private GameObject _pausePanel;
     [SerializeField] private Slider _sensivitySlider;
     [SerializeField] private Slider _volumeSlider;
-    [SerializeField] private SC_FPSController _controller;
+    public SC_FPSController _controller;
     [SerializeField] private GameObject _loseScreen;
     [SerializeField] private Slider _progressBar;
     [SerializeField] private Text _timerText;
     [SerializeField] private GameObject _closePauseUI;
+    public AudioMixer Mixer;
     private ControlProgress _controlProgress;
     private bool _isDesktop;
 
@@ -45,12 +47,14 @@ public class UIBehaviour : MonoBehaviour
                 _closePauseUI.transform.GetChild(i).gameObject.SetActive(false);
             }
         }
-        
+
+        _controller.characterController.enabled = false;
+        _controller.rb.isKinematic = true;
         _progressBar.gameObject.SetActive(false);
         _lose = true;
         _loseScreen.SetActive(true);
         _controller.Pause = true;
-        _controller.characterController.enabled = false;
+        _controller.rb.isKinematic = true;
 
         if (YandexGame.EnvironmentData.isDesktop)
         {
@@ -88,7 +92,12 @@ public class UIBehaviour : MonoBehaviour
         _controlProgress.Spawn(true);
         Destroy(_controller.gameObject);
         timer = 0;
-        YandexGame.FullscreenShow();
+        if (YandexGame.timerShowAd > 60)
+        {
+            AudioListener.volume = 0;
+            Mixer.SetFloat("MasterVolume", -80);
+            YandexGame.FullscreenShow();
+        }
         _controller.Pause = false;
         if (_isDesktop)
         {
@@ -127,8 +136,11 @@ public class UIBehaviour : MonoBehaviour
     {
         if (_pausePanel.activeInHierarchy)
         {
+
             _pausePanel.SetActive(false);
-            _controller.Pause = false;            
+            _controller.Pause = false;
+            _controller.characterController.enabled = true;
+            _controller.rb.isKinematic = false;
 
             if (_isDesktop)
             {
@@ -146,8 +158,11 @@ public class UIBehaviour : MonoBehaviour
         }
         else
         {
+
             _pausePanel.SetActive(true);
             _controller.Pause = true;
+            _controller.characterController.enabled = false;
+            _controller.rb.isKinematic = true;
 
             if (_isDesktop)
             {
@@ -176,8 +191,14 @@ public class UIBehaviour : MonoBehaviour
 
     public IEnumerator WaitTime()
     {
+        if (YandexGame.timerShowAd < 70) 
+        {
+            StopCoroutine(WaitTime());        
+        }
         _timerText.transform.parent.gameObject.SetActive(true);
         _timerText.gameObject.SetActive(true);
+        _controller.rb.isKinematic = true;
+        _controller.characterController.enabled = false;
         if (YandexGame.lang == "ru")  
         {
             _timerText.text = "Реклама через 2";
@@ -196,6 +217,10 @@ public class UIBehaviour : MonoBehaviour
             _timerText.text = "advertising in 1";
         }
         yield return new WaitForSeconds(1);
+        AudioListener.volume = 0;
+        Mixer.SetFloat("MasterVolume", -80);
+        _controller.characterController.enabled = true;
+        _controller.rb.isKinematic = false;
         _timerText.gameObject.SetActive(false);
         _timerText.transform.parent.gameObject.SetActive(false);
         YandexGame.FullscreenShow();
