@@ -29,6 +29,7 @@ public class CameraMov : MonoBehaviour
 
     void Update()
     {
+        if (Controller.Pause) return;
         if (_isDesktop) return;
         GetTouchInput();
 

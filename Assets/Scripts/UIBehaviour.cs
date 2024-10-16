@@ -57,6 +57,12 @@ public class UIBehaviour : MonoBehaviour
             {
                 _closePauseUI.transform.GetChild(i).gameObject.SetActive(false);
             }
+
+
+        }
+        else
+        {
+            SettingsImageForPC.SetActive(false);
         }
 
         _controller.characterController.enabled = false;
@@ -152,6 +158,7 @@ public class UIBehaviour : MonoBehaviour
                 Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
                 _closePauseUI.transform.GetChild(0).gameObject.SetActive(true);
+                SettingsImageForPC.SetActive(true);
             }
             else
             {
@@ -173,7 +180,7 @@ public class UIBehaviour : MonoBehaviour
             {
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
-
+                SettingsImageForPC.SetActive(false);
                 _closePauseUI.transform.GetChild(0).gameObject.SetActive(false);
             }
             else
