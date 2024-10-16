@@ -208,6 +208,7 @@ public class UIBehaviour : MonoBehaviour
             StopCoroutine(WaitTime());        
         }
         _timerText.transform.parent.gameObject.SetActive(true);
+        _controller.Pause = true;
         _timerText.gameObject.SetActive(true);
         _controller.rb.isKinematic = true;
         _controller.characterController.enabled = false;
@@ -235,6 +236,7 @@ public class UIBehaviour : MonoBehaviour
         _controller.rb.isKinematic = false;
         _timerText.gameObject.SetActive(false);
         _timerText.transform.parent.gameObject.SetActive(false);
+        _controller.Pause = false;
         YandexGame.FullscreenShow();
     }
 }
